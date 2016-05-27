@@ -12,9 +12,9 @@ public class Transaction implements Serializable {
     public String hash;
     public String sourceUser;
     public String destinationUser;
-    public float amount;
+    public int amount;
 
-    public Transaction(String sourceUser, String destinationUser, float amount) throws NoSuchAlgorithmException {
+    public Transaction(String sourceUser, String destinationUser, int amount) throws NoSuchAlgorithmException {
         this.sourceUser = sourceUser;
         this.destinationUser = destinationUser;
         this.amount = amount;

@@ -26,22 +26,23 @@ public class BlockChain implements Serializable {
         return block.hash.equals(realHash);
     }
 
-    public boolean add(Block block) throws NoSuchAlgorithmException {
+    public boolean add(Transaction transaction) throws NoSuchAlgorithmException {
+
+        Block block = new Block(transaction, getLastBlockHash(), blockList.size());
 
         if (validateBlock(block)) {
             blockList.add(block);
+            System.out.println(String.format("Adding new block. source: %s destination: %d amount %d",
+                    transaction.sourceUser, transaction.destinationUser, transaction.amount));
             return true;
         } else {
+            System.out.println("Block validation failed");
             return false;
         }
     }
 
     public String getLastBlockHash() {
         return blockList.isEmpty() ? ZERO_BLOCK_HASH : blockList.get(blockList.size() - 1).hash;
-    }
-
-    public int getLastBlockId() {
-        return blockList.size() - 1;
     }
 
     public boolean validate() throws NoSuchAlgorithmException {
@@ -54,7 +55,7 @@ public class BlockChain implements Serializable {
         return true;
     }
 
-    public List<Transaction> getTransactionsByUser(String user) {
+    public List<Transaction> getPosibleTransactionsByUser(String user) {
 
         HashMap<Integer, Transaction> userDestinationTransactions = new HashMap<>();
         List<Transaction> userSourceTransactions = new ArrayList<>();
