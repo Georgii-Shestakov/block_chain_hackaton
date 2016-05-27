@@ -13,7 +13,7 @@ import static java.awt.SystemColor.text;
  */
 public class BlockChain implements Serializable {
 
-    public static final String ZERO_BLOCK_HASH = "Hi there I am the very first block";
+    public static final String ZERO_BLOCK_HASH = "Hi there, I am the very first block";
 
     public List<Block> blockList;
 
@@ -39,8 +39,7 @@ public class BlockChain implements Serializable {
 
     private boolean validate() throws NoSuchAlgorithmException {
         for (int i = blockList.size() - 1; i <= 0; i--) {
-            if (!validateBlock(blockList.get(i)))
-            {
+            if (!validateBlock(blockList.get(i))) {
                 return false;
             }
         }

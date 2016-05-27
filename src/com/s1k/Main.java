@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class Main {
 
+    private final static String BLOCK_CHAIN_FILENAME = "./block_chain.db";
+
     private static BlockChain blockChain = new BlockChain();
 
     private static String[] users = {"user1", "user2", "user3"};
