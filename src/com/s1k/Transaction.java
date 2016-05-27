@@ -15,10 +15,22 @@ public class Transaction implements Serializable {
     public String destinationUser;
     public float amount;
 
+    public Transaction(String sourceUser, String destinationUser, float amount) throws NoSuchAlgorithmException {
+        this.sourceUser = sourceUser;
+        this.destinationUser = destinationUser;
+        this.amount = amount;
+        generateHash();
+    }
+
     public String generateHash() throws NoSuchAlgorithmException {
         return Main.getHash(sourceUser+destinationUser+amount);
     }
-    private void writeHash() throws NoSuchAlgorithmException {
+
+    public void writeHash() throws NoSuchAlgorithmException {
         hash = generateHash();
+    }
+
+    public boolean validate() throws NoSuchAlgorithmException {
+        return generateHash().equals(hash);
     }
 }
