@@ -20,9 +20,13 @@ public class Main {
         try {
             blockChain = BlockChain.load(BLOCK_CHAIN_FILENAME);
 
-            Transaction transaction = createNewTransaction(users[new Random().nextInt(2)], users[new Random().nextInt(2)], new Random().nextInt(10));
-            blockChain.add(createNewBlock(transaction));
+            //Transaction transaction = createNewTransaction(users[new Random().nextInt(2)], users[new Random().nextInt(2)], new Random().nextInt(10));
 
+            // first transaction
+            if (blockChain.blockList.isEmpty()) {
+                Transaction transaction = createNewTransaction("master", "user1", 100);
+                blockChain.add(createNewBlock(transaction));
+            }
         } catch (NoSuchAlgorithmException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -48,7 +52,7 @@ public class Main {
         return new Block(transaction, blockChain.getLastBlockHash(), blockChain.getLastBlockId() + 1);
     }
 
-    public static List<Transaction> getTransactionsByUser(String user) {
+    /*public static List<Transaction> getTransactionsByUser(String user) {
 
-    }
+    }*/
 }

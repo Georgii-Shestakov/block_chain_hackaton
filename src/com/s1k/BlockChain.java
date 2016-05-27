@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.SystemColor.text;
@@ -77,6 +78,7 @@ public class BlockChain implements Serializable {
 
         if (blockChain == null || ! blockChain.validate()) {
             blockChain = new BlockChain();
+            blockChain.blockList = new ArrayList<>();
         }
 
         return blockChain;
