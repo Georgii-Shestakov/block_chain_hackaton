@@ -5,6 +5,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.SystemColor.text;
@@ -17,6 +19,12 @@ public class BlockChain implements Serializable {
     public static final String ZERO_BLOCK_HASH = "Hi there, I am the very first block";
 
     public List<Block> blockList;
+
+    private boolean validateBlock(Block block) throws NoSuchAlgorithmException {
+        String realHash = block.generateHash(getLastBlockHash());
+
+        return block.hash.equals(realHash);
+    }
 
     public boolean add(Block block) throws NoSuchAlgorithmException {
 
@@ -36,12 +44,6 @@ public class BlockChain implements Serializable {
         return blockList.size() - 1;
     }
 
-    private boolean validateBlock(Block block) throws NoSuchAlgorithmException {
-        String realHash = block.generateHash(getLastBlockHash());
-
-        return block.hash.equals(realHash);
-    }
-
     public boolean validate() throws NoSuchAlgorithmException {
         for (int i = blockList.size() - 1; i <= 0; i--) {
             if (!validateBlock(blockList.get(i))) {
@@ -50,6 +52,30 @@ public class BlockChain implements Serializable {
         }
 
         return true;
+    }
+
+    public List<Transaction> getTransactionsByUser(String user) {
+
+        HashMap<Integer, Transaction> userDestinationTransactions = new HashMap<>();
+        List<Transaction> userSourceTransactions = new ArrayList<>();
+
+        for (Block block : blockList) {
+            if (block.transaction.destinationUser.equals(user)) {
+                userDestinationTransactions.put(block.height, block.transaction);
+            }
+            if (block.transaction.sourceUser.equals(user)) {
+                userSourceTransactions.add(block.transaction);
+            }
+        }
+
+        //remove all sended transactions
+        for (Transaction transaction : userSourceTransactions) {
+            if (userDestinationTransactions.containsKey(transaction.sourceTransactionBlockHeight)) {
+                userDestinationTransactions.remove(transaction.sourceTransactionBlockHeight);
+            }
+        }
+
+        return new ArrayList<>(userDestinationTransactions.values());
     }
 
 
