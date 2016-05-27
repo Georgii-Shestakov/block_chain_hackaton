@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Transaction implements Serializable {
 
-    public int sourceTransactionBlockId; //this is source transaction id, but we have only 1 transaction in one block
+    public int sourceTransactionBlockHeight; //this is source transaction height, but we have only 1 transaction in one block
     public String hash;
     public String sourceUser;
     public String destinationUser;

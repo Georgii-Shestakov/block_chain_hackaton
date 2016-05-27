@@ -8,14 +8,16 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Block implements Serializable {
 
-    public int id;
+    public int height;
     public String hash;
-    public Transaction transaction; //for
+    // for testing we just create only one transaction in block
+    // later it can be changed to transactions list
+    public Transaction transaction;
 
-    public Block(Transaction transaction, String lastBlockHash, int id) throws NoSuchAlgorithmException {
+    public Block(Transaction transaction, String lastBlockHash, int height) throws NoSuchAlgorithmException {
         this.transaction = transaction;
         writeHash(lastBlockHash);
-        this.id = id;
+        this.height = height;
     }
 
     public String generateHash(String prevBlockHash) throws NoSuchAlgorithmException {
