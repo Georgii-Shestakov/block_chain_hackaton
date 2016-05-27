@@ -12,9 +12,16 @@ public class Block implements Serializable {
     public String hash;
     public Transaction transaction;
 
+    public Block(Transaction transaction, String lastBlockHash, int id) throws NoSuchAlgorithmException {
+        this.transaction = transaction;
+        writeHash(lastBlockHash);
+        this.id = id;
+    }
+
     public String generateHash(String prevBlockHash) throws NoSuchAlgorithmException {
         return Main.getHash(prevBlockHash + transaction.hash);
     }
+
     private void writeHash(String prevBlockHash) throws NoSuchAlgorithmException {
         hash = generateHash(prevBlockHash);
     }
