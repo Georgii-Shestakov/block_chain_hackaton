@@ -8,8 +8,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Transaction implements Serializable {
 
-    public int id;
-    public int sourceTransactionId; //this is source transaction id, but we have only 1 transaction in one block
+    public int sourceTransactionBlockId; //this is source transaction id, but we have only 1 transaction in one block
     public String hash;
     public String sourceUser;
     public String destinationUser;
@@ -19,7 +18,7 @@ public class Transaction implements Serializable {
         this.sourceUser = sourceUser;
         this.destinationUser = destinationUser;
         this.amount = amount;
-        generateHash();
+        writeHash();
     }
 
     public String generateHash() throws NoSuchAlgorithmException {
