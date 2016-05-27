@@ -21,7 +21,7 @@ public class Block implements Serializable {
     }
 
     public String generateHash(String prevBlockHash) throws NoSuchAlgorithmException {
-        return Main.getHash(prevBlockHash + transaction.hash);
+        return Sha.hash256(prevBlockHash + transaction.hash);
     }
 
     private void writeHash(String prevBlockHash) throws NoSuchAlgorithmException {

@@ -32,7 +32,7 @@ public class BlockChain implements Serializable {
 
         if (validateBlock(block)) {
             blockList.add(block);
-            System.out.println(String.format("Adding new block. source: %s destination: %d amount %d",
+            System.out.println(String.format("Adding new block. source: %s destination: %s amount %d",
                     transaction.sourceUser, transaction.destinationUser, transaction.amount));
             return true;
         } else {
@@ -55,7 +55,7 @@ public class BlockChain implements Serializable {
         return true;
     }
 
-    public List<Transaction> getPosibleTransactionsByUser(String user) {
+    public HashMap<Integer, Transaction> getPossibleTransactionsByUser(String user) throws Exception {
 
         HashMap<Integer, Transaction> userDestinationTransactions = new HashMap<>();
         List<Transaction> userSourceTransactions = new ArrayList<>();
@@ -76,7 +76,14 @@ public class BlockChain implements Serializable {
             }
         }
 
-        return new ArrayList<>(userDestinationTransactions.values());
+        for (HashMap.Entry transactionEntry : userDestinationTransactions.entrySet()) {
+            String signingDataForVerify = ((Transaction) transactionEntry.getValue()).sourceUser + ((Transaction) transactionEntry.getValue()).amount;
+            if (!SignData.verifySig(Sha.hash256byteArray(signingDataForVerify),((Transaction)transactionEntry.getKey()).publicKey, Sha.hash256byteArray(((Transaction)transactionEntry.getKey()).signature))) {
+                userDestinationTransactions.remove(transactionEntry.getKey());
+            }
+        }
+
+        return userDestinationTransactions;
     }
 
 

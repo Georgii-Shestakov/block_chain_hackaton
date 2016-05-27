@@ -1,7 +1,10 @@
 package com.s1k;
 
 import java.io.Serializable;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * Created by kelaris on 27/05/16.
@@ -13,16 +16,29 @@ public class Transaction implements Serializable {
     public String sourceUser;
     public String destinationUser;
     public int amount;
+    public String signature;
+    public PublicKey publicKey;
 
-    public Transaction(String sourceUser, String destinationUser, int amount) throws NoSuchAlgorithmException {
+    public Transaction(int sourceTransactionBlockHeight,
+                       String sourceUser,
+                       String destinationUser,
+                       int amount, PrivateKey privateKey) throws Exception {
+        this.sourceTransactionBlockHeight = sourceTransactionBlockHeight;
         this.sourceUser = sourceUser;
         this.destinationUser = destinationUser;
         this.amount = amount;
         writeHash();
+
+        KeyPair keyPair = SignData.generateKeyPair(312);
+        String signinData = sourceUser + amount;
+
+        this.signature = Sha.bytesToHex(SignData.signData(Sha.hash256byteArray(signinData), keyPair.getPrivate()));
+        this.publicKey = keyPair.getPublic();
+
     }
 
     public String generateHash() throws NoSuchAlgorithmException {
-        return Main.getHash(sourceUser+destinationUser+amount);
+        return Sha.hash256(sourceUser+destinationUser+amount);
     }
 
     public void writeHash() throws NoSuchAlgorithmException {
