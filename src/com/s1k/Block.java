@@ -10,7 +10,7 @@ public class Block implements Serializable {
 
     public int id;
     public String hash;
-    public Transaction transaction;
+    public Transaction transaction; //for
 
     public Block(Transaction transaction, String lastBlockHash, int id) throws NoSuchAlgorithmException {
         this.transaction = transaction;

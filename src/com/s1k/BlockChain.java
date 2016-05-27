@@ -31,13 +31,17 @@ public class BlockChain implements Serializable {
         return blockList.isEmpty() ? ZERO_BLOCK_HASH : blockList.get(blockList.size() - 1).hash;
     }
 
+    public int getLastBlockId() {
+        return blockList.size() - 1;
+    }
+
     private boolean validateBlock(Block block) throws NoSuchAlgorithmException {
         String realHash = block.generateHash(getLastBlockHash());
 
         return block.hash.equals(realHash);
     }
 
-    private boolean validate() throws NoSuchAlgorithmException {
+    public boolean validate() throws NoSuchAlgorithmException {
         for (int i = blockList.size() - 1; i <= 0; i--) {
             if (!validateBlock(blockList.get(i))) {
                 return false;
@@ -58,7 +62,7 @@ public class BlockChain implements Serializable {
         } catch (Exception e) {e.printStackTrace();}
     }
 
-    public static BlockChain load(String filename) {
+    public static BlockChain load(String filename) throws NoSuchAlgorithmException {
         ObjectInput objectInput;
         BlockChain blockChain = null;
         try {
@@ -70,6 +74,10 @@ public class BlockChain implements Serializable {
                 objectInput.close();
             }
         } catch (Exception e) {e.printStackTrace();}
+
+        if (blockChain == null || ! blockChain.validate()) {
+            blockChain = new BlockChain();
+        }
 
         return blockChain;
     }
