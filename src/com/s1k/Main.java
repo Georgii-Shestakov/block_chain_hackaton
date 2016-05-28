@@ -1,5 +1,6 @@
 package com.s1k;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ public class Main {
         blockChain.save(BLOCK_CHAIN_FILENAME);
     }
 
-    private static void printUserAmount(String user) {
+    private static void printUserAmount(String user) throws Exception {
         HashMap<Integer, Transaction>  transactions = blockChain.getPossibleTransactionsByUser(user);
         int userAmount = 0;
         for (Transaction transaction : transactions.values()) {
@@ -67,11 +68,11 @@ public class Main {
         System.out.println(String.format("%s amount: %d",user, userAmount));
     }
 
-    public static Transaction createMasterTransaction(String source, String destination, int amount) throws NoSuchAlgorithmException {
-        return new Transaction(0, source, destination, amount);
+    public static Transaction createMasterTransaction(String source, String destination, int amount, PrivateKey privateKey) throws Exception {
+        return new Transaction(0, source, destination, amount, privateKey);
     }
 
-    public static List<Transaction> createTransaction(String source, String destination, int amount) throws NoSuchAlgorithmException {
+    public static List<Transaction> createTransaction(String source, String destination, int amount, PrivateKey privateKey) throws Exception {
 
         HashMap<Integer, Transaction> sourceUserTransaction = blockChain.getPossibleTransactionsByUser(source);
         List<Transaction> newTransactions = new ArrayList<>();
@@ -81,15 +82,15 @@ public class Main {
             Integer blockHeight = (Integer) transactionEntry.getKey();
 
             if (transaction.amount < amount) {
-                newTransactions.add(new Transaction(blockHeight, source, destination, transaction.amount));
+                newTransactions.add(new Transaction(blockHeight, source, destination, transaction.amount, privateKey));
                 amount = amount - transaction.amount;
             } else if (transaction.amount > amount) {
-                newTransactions.add(new Transaction(blockHeight, source, destination, amount));
+                newTransactions.add(new Transaction(blockHeight, source, destination, amount, privateKey));
                 // give change back
-                newTransactions.add(new Transaction(blockHeight, source, source, transaction.amount - amount));
+                newTransactions.add(new Transaction(blockHeight, source, source, transaction.amount - amount, privateKey));
                 break;
             } else {
-                newTransactions.add(new Transaction(blockHeight, source, destination, amount));
+                newTransactions.add(new Transaction(blockHeight, source, destination, amount, privateKey));
                 break;
             }
 
@@ -99,7 +100,7 @@ public class Main {
     }
 
     private static void doTransaction(String source, String destination, int amount) throws NoSuchAlgorithmException {
-        List<Transaction> transactions = createTransaction(source, destination, amount);
+        List<Transaction> transactions = createTransaction(source, destination, amount, );
         for (Transaction transaction : transactions) {
             blockChain.add(transaction);
         }
