@@ -16,25 +16,16 @@ public class Transaction implements Serializable {
     public String sourceUser;
     public String destinationUser;
     public int amount;
-    public String signature;
-    public PublicKey publicKey;
 
     public Transaction(int sourceTransactionBlockHeight,
                        String sourceUser,
                        String destinationUser,
-                       int amount, PrivateKey privateKey) throws Exception {
+                       int amount) throws NoSuchAlgorithmException {
         this.sourceTransactionBlockHeight = sourceTransactionBlockHeight;
         this.sourceUser = sourceUser;
         this.destinationUser = destinationUser;
         this.amount = amount;
         writeHash();
-
-        KeyPair keyPair = SignData.generateKeyPair(312);
-        String signinData = sourceUser + amount;
-
-        this.signature = Sha.bytesToHex(SignData.signData(Sha.hash256byteArray(signinData), keyPair.getPrivate()));
-        this.publicKey = keyPair.getPublic();
-
     }
 
     public String generateHash() throws NoSuchAlgorithmException {
