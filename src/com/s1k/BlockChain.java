@@ -55,7 +55,7 @@ public class BlockChain implements Serializable {
         return true;
     }
 
-    public HashMap<Integer, Transaction> getPossibleTransactionsByUser(String user) throws Exception {
+    public HashMap<Integer, Transaction> getPossibleTransactionsByUser(String user) {
 
         HashMap<Integer, Transaction> userDestinationTransactions = new HashMap<>();
         List<Transaction> userSourceTransactions = new ArrayList<>();
@@ -73,13 +73,6 @@ public class BlockChain implements Serializable {
         for (Transaction transaction : userSourceTransactions) {
             if (userDestinationTransactions.containsKey(transaction.sourceTransactionBlockHeight)) {
                 userDestinationTransactions.remove(transaction.sourceTransactionBlockHeight);
-            }
-        }
-
-        for (HashMap.Entry transactionEntry : userDestinationTransactions.entrySet()) {
-            String signingDataForVerify = ((Transaction) transactionEntry.getValue()).sourceUser + ((Transaction) transactionEntry.getValue()).amount;
-            if (!SignData.verifySig(Sha.hash256byteArray(signingDataForVerify),((Transaction)transactionEntry.getKey()).publicKey, Sha.hash256byteArray(((Transaction)transactionEntry.getKey()).signature))) {
-                userDestinationTransactions.remove(transactionEntry.getKey());
             }
         }
 
